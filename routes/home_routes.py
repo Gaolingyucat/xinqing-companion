@@ -3,7 +3,7 @@
 from collections import Counter
 from pathlib import Path
 
-from flask import Blueprint, current_app, render_template
+from flask import Blueprint, current_app, redirect, render_template, url_for
 
 from modules.record_manager import read_records
 
@@ -12,6 +12,12 @@ home_bp = Blueprint("home", __name__)
 
 
 @home_bp.route("/")
+def root_redirect():
+    return redirect(url_for("app.app_home"))
+
+
+@home_bp.route("/dashboard")
+@home_bp.route("/system")
 def index():
     csv_path = Path(current_app.root_path) / "data" / "records.csv"
     records = read_records(csv_path)
