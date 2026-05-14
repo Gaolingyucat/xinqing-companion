@@ -1,0 +1,14 @@
+-r requirements.txt
+
+# 本地完整版增强依赖（不用于 Render 主 App）
+mediapipe==0.10.14
+deepface==0.0.99
+tensorflow==2.16.1
+tf-keras==2.16.0
+retina-face==0.0.17
+mtcnn==1.0.0
+gdown==6.0.0
+jax==0.10.0
+jaxlib==0.10.0
+opencv-python==4.13.0.92
+opencv-contrib-python==4.13.0.92
