@@ -1,0 +1,44 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 情绪星球{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>情绪星球</h1>
+  <p class="app-card-desc">把今天的心情放到星球上，看看属于你的情绪天气。</p>
+</section>
+
+<section class="app-card mood-game-card app-animate-card" id="moodGameCard">
+  <p class="mood-game-label">今天更像哪一种状态？</p>
+  <div class="mood-chip-grid" id="moodChipGrid">
+    <button type="button" class="mood-chip" data-mood="轻松">✨ 轻松</button>
+    <button type="button" class="mood-chip" data-mood="有点累">☁️ 有点累</button>
+    <button type="button" class="mood-chip" data-mood="心里闷">🌧 心里闷</button>
+    <button type="button" class="mood-chip" data-mood="快撑不住">⛈ 快撑不住</button>
+  </div>
+
+  <div class="mood-planet-wrap">
+    <div class="mood-sky-decor" aria-hidden="true">
+      <span class="mood-sky-icon">☁️</span>
+      <span class="mood-sky-icon">🌤️</span>
+    </div>
+    <div class="mood-planet" id="moodPlanet">🪐</div>
+    <p class="mood-planet-hint" id="moodPlanetHint">先选一个心情，放到星球上。</p>
+  </div>
+
+  <div class="app-action-row">
+    <button class="app-primary-action app-btn" id="moodGenerateBtn" type="button">生成心情天气</button>
+  </div>
+
+  <div class="mood-game-result" id="moodGameResult" hidden>
+    <p class="mood-weather" id="moodWeatherText"></p>
+    <p class="mood-line" id="moodLineText"></p>
+    <p class="mood-note">这只是一个记录参考，不代表你必须保持这样。</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/mood_game.js') }}"></script>
+{% endblock %}

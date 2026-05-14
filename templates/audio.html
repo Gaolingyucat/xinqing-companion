@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}语音情绪识别 - 多模态情绪识别与风险预警系统{% endblock %}
+
+{% block content %}
+<section class="feature-section">
+  <h2>语音情绪识别</h2>
+
+  {% if error_message %}
+  <div class="notice notice-error">{{ error_message }}</div>
+  {% endif %}
+
+  <div class="audio-grid">
+    <article class="audio-card">
+      <h3>网页录音分析</h3>
+      <p class="audio-desc">点击“开始录音”后可直接录制语音，停止后会自动上传并分析。</p>
+
+      <div class="recorder-controls">
+        <button type="button" id="btn-start-record" class="primary-btn">开始录音</button>
+        <button type="button" id="btn-stop-record" class="primary-btn" disabled>停止录音并分析</button>
+        <button type="button" id="btn-reset-record" class="ghost-btn" disabled>重新录音</button>
+      </div>
+      <p class="audio-desc">录音状态：<span id="record-status">未开始</span></p>
+      <p class="audio-desc">录音时长：<span id="record-seconds">0</span> 秒</p>
+      <div id="record-warning" class="notice notice-error" style="display:none;"></div>
+      <audio id="record-player" controls style="display:none; width:100%; margin-top:10px;"></audio>
+
+      <hr class="section-separator">
+
+      <h3>本地 wav 上传（备用）</h3>
+      <p class="audio-desc">第一版核心支持 wav。上传 mp3/m4a/webm 时会提示使用网页录音或 wav。</p>
+      <form action="{{ url_for('audio.audio_page') }}" method="post" enctype="multipart/form-data" class="audio-form">
+        <input type="file" name="audio_file" accept=".wav,.mp3,.m4a,.webm,audio/wav,audio/mpeg,audio/mp4,audio/webm">
+        <button type="submit" class="primary-btn">上传并识别</button>
+      </form>
+      {% if uploaded_filename %}
+      <p class="file-name">已上传文件：{{ uploaded_filename }}</p>
+      {% endif %}
+    </article>
+
+    <article class="audio-card">
+      <h3>分析结果</h3>
+      <div id="audio-result-box" class="result-box" {% if not upload_result %}style="display:none;"{% endif %}>
+        <p>文件名：<span id="res-filename">{{ uploaded_filename or "" }}</span></p>
+        <p>语音情绪类别：<span id="res-emotion">{{ upload_result.emotion_cn if upload_result else "" }}</span>{% if upload_result %}（<span id="res-emotion-en">{{ upload_result.emotion }}</span>）{% else %}（<span id="res-emotion-en"></span>）{% endif %}</p>
+        <p>置信度：<span id="res-confidence">{% if upload_result %}{{ '%.2f'|format(upload_result.confidence) }}{% endif %}</span></p>
+        <p>音频时长：<span id="res-duration">{% if upload_result %}{{ upload_result.features.duration }}{% endif %}</span> 秒</p>
+        <p>平均能量：<span id="res-energy">{% if upload_result %}{{ upload_result.features.rms_energy }}{% endif %}</span></p>
+        <p>过零率：<span id="res-zcr">{% if upload_result %}{{ upload_result.features.zero_crossing_rate }}{% endif %}</span></p>
+        <p>音量等级：<span id="res-volume">{% if upload_result %}{{ upload_result.features.volume_level }}{% endif %}</span></p>
+        <p>风险分数：<span id="res-risk-score">{% if upload_result %}{{ upload_result.risk_score }}{% endif %}</span></p>
+        <p>风险等级：<span id="res-risk-level">{% if upload_result %}{{ upload_result.risk_level }}{% endif %}</span></p>
+        <p>干预建议：<span id="res-suggestion">{% if upload_result %}{{ upload_result.suggestion }}{% endif %}</span></p>
+      </div>
+
+      <div id="audio-result-empty" class="audio-desc" {% if upload_result %}style="display:none;"{% endif %}>
+        完成网页录音或上传 wav 文件后，将在此处展示语音状态与风险评估结果。
+      </div>
+
+      <div id="audio-result-warning" class="notice" style="display:none; color:#92400e; border:1px solid #fcd34d; background:#fffbeb;"></div>
+      {% if upload_result and upload_result.warning %}
+      <div class="notice" style="margin-top:12px; color:#92400e; border:1px solid #fcd34d; background:#fffbeb;">
+        {{ upload_result.warning }}
+      </div>
+      {% endif %}
+
+      <a href="{{ url_for('home.index') }}" class="ghost-btn" style="margin-top: 10px;">返回首页</a>
+    </article>
+  </div>
+</section>
+
+<script src="{{ url_for('static', filename='js/audio_recorder.js') }}"></script>
+<script>
+  window.AUDIO_RECORDER_CONFIG = {
+    uploadUrl: "{{ url_for('audio.audio_record') }}"
+  };
+</script>
+{% endblock %}

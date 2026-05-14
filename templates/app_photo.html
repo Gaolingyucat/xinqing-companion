@@ -1,0 +1,56 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 拍一张{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>拍一张</h1>
+  <p class="app-card-desc">用表情记录一下现在的状态。</p>
+</section>
+
+<section class="app-card">
+  <div class="app-form-group">
+    <label for="photoInput">上传一张照片</label>
+    <input id="photoInput" type="file" accept="image/png,image/jpeg,image/jpg" />
+  </div>
+  <div class="app-action-row">
+    <button class="app-primary-action app-btn" id="photoAnalyzeBtn" type="button">开始分析</button>
+  </div>
+  <p class="app-overview-time" id="photoStatusText">等待上传图片</p>
+</section>
+
+<section class="app-card" id="photoResultCard" hidden>
+  <h2>表情心情记录</h2>
+  <div class="photo-preview-wrap">
+    <img id="photoPreviewImage" class="photo-preview" alt="上传预览" hidden />
+  </div>
+  <p class="app-card-desc" id="photoCompanionText"></p>
+  <div class="app-overview-grid">
+    <div class="app-overview-item">
+      <p>表情状态</p>
+      <strong id="photoEmotionText">-</strong>
+    </div>
+    <div class="app-overview-item">
+      <p>置信度</p>
+      <strong id="photoConfidenceText">-</strong>
+    </div>
+  </div>
+  <p class="app-overview-time" id="photoRiskText">风险等级：-</p>
+  <p class="app-card-desc" id="photoSuggestionText"></p>
+  <details class="app-detail-box">
+    <summary>查看分析</summary>
+    <ul class="app-detail-list">
+      <li><strong>回复来源：</strong><span id="photoReplySourceText">-</span></li>
+      <li><strong>图像识别来源：</strong><span id="photoImageSourceText">-</span></li>
+      <li><strong>AI理解：</strong><span id="photoLlmEmotionText">-</span></li>
+      <li><strong>用户意图：</strong><span id="photoLlmIntentText">-</span></li>
+      <li><strong>分析说明：</strong><span id="photoLlmReasonText">-</span></li>
+    </ul>
+  </details>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_photo.js') }}"></script>
+{% endblock %}

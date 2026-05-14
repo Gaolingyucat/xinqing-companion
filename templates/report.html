@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}报告生成 - 多模态情绪识别与风险预警系统{% endblock %}
+
+{% block content %}
+<section class="feature-section">
+  <h2>情绪状态风险评估报告</h2>
+
+  <div class="report-actions">
+    <a href="{{ url_for('home.index') }}" class="ghost-btn">返回首页</a>
+    <form action="{{ url_for('report.report_page') }}" method="post">
+      <input type="hidden" name="action" value="refresh">
+      <button type="submit" class="primary-btn">刷新报告</button>
+    </form>
+    <form action="{{ url_for('report.report_page') }}" method="post">
+      <input type="hidden" name="action" value="save">
+      <button type="submit" class="primary-btn">保存 HTML 报告</button>
+    </form>
+  </div>
+
+  {% if saved_filename %}
+  <div class="notice notice-success">报告已保存到 reports/{{ saved_filename }}</div>
+  {% endif %}
+
+  {% if report_data.has_data %}
+  <div class="report-stats">
+    <article class="stats-card"><p class="stats-label">总检测次数</p><p class="stats-value">{{ report_data.stats.total }}</p></article>
+    <article class="stats-card"><p class="stats-label">图像检测次数</p><p class="stats-value">{{ report_data.stats.image }}</p></article>
+    <article class="stats-card"><p class="stats-label">文本检测次数</p><p class="stats-value">{{ report_data.stats.text }}</p></article>
+    <article class="stats-card"><p class="stats-label">语音检测次数</p><p class="stats-value">{{ report_data.stats.audio }}</p></article>
+    <article class="stats-card"><p class="stats-label">低风险次数</p><p class="stats-value">{{ report_data.stats.low_risk }}</p></article>
+    <article class="stats-card"><p class="stats-label">中风险次数</p><p class="stats-value">{{ report_data.stats.mid_risk }}</p></article>
+    <article class="stats-card"><p class="stats-label">高风险次数</p><p class="stats-value stats-value-alert">{{ report_data.stats.high_risk }}</p></article>
+    <article class="stats-card"><p class="stats-label">高风险占比</p><p class="stats-value">{{ report_data.stats.high_risk_ratio }}</p></article>
+    <article class="stats-card"><p class="stats-label">最近一次检测时间</p><p class="stats-value stats-small">{{ report_data.stats.latest_time }}</p></article>
+    <article class="stats-card"><p class="stats-label">出现最多的情绪类别</p><p class="stats-value stats-small">{{ report_data.stats.most_common_emotion }}</p></article>
+  </div>
+
+  <article class="report-card">
+    <h3>综合评估</h3>
+    <p class="audio-desc">{{ report_data.summary }}</p>
+  </article>
+
+  <article class="report-card">
+    <h3>最近 5 条检测记录</h3>
+    <div class="history-table-wrap">
+      <table class="history-table report-table">
+        <thead>
+          <tr>
+            <th class="col-time">时间</th>
+            <th class="col-type">输入类型</th>
+            <th class="col-emotion-cn">中文情绪</th>
+            <th class="col-risk-level">风险等级</th>
+            <th class="col-risk-score">风险分数</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in report_data.recent_records %}
+          <tr>
+            <td class="col-time">{{ row.time }}</td>
+            <td class="col-type">{{ row.input_type }}</td>
+            <td class="col-emotion-cn">{{ row.emotion_cn }}</td>
+            <td class="col-risk-level">
+              {% if row.risk_level == "高风险" %}
+              <span class="risk-pill risk-high">高风险</span>
+              {% elif row.risk_level == "中风险" %}
+              <span class="risk-pill risk-mid">中风险</span>
+              {% elif row.risk_level == "低风险" %}
+              <span class="risk-pill risk-low">低风险</span>
+              {% else %}
+              <span class="risk-pill risk-unknown">{{ row.risk_level or "未知" }}</span>
+              {% endif %}
+            </td>
+            <td class="col-risk-score">{{ row.risk_score }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
+  {% else %}
+  <p class="audio-desc">暂无检测记录，无法生成报告</p>
+  {% endif %}
+</section>
+{% endblock %}

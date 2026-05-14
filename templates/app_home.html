@@ -1,0 +1,111 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 首页{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <div class="app-sky-decor" aria-hidden="true">
+    <span class="sky-cloud cloud-a">☁️</span>
+    <span class="sky-cloud cloud-b">☁️</span>
+    <span class="sky-moon">🌙</span>
+    <span class="sky-star star-a">✨</span>
+    <span class="sky-star star-b">⭐</span>
+  </div>
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1><span id="greetingText">你好</span>，<span id="nicknameText">心晴用户</span></h1>
+  <p class="app-card-desc">今天也可以慢慢来。</p>
+</section>
+
+<section class="app-card app-main-entry-card app-animate-card app-pulse-card">
+  <div class="app-card-head">
+    <h2>今日心情</h2>
+    <span class="app-status-chip {{ today_status.badge_class }}">{{ today_status.label }}</span>
+  </div>
+  <div class="app-weather-chip">
+    <span>{{ mood_weather.emoji }}</span>
+    <strong>心情天气：{{ mood_weather.weather }}</strong>
+  </div>
+  <p class="app-quote">{{ mood_weather.line }}</p>
+  <p class="app-card-desc">{{ today_status.note }}</p>
+  <p class="app-quote">{{ companion_line }}</p>
+  {% if latest_summary %}
+  <div class="app-overview-grid">
+    <div class="app-overview-item">
+      <p>最近情绪</p>
+      <strong>{{ latest_summary.emotion }}</strong>
+    </div>
+    <div class="app-overview-item">
+      <p>最近时间</p>
+      <strong class="app-small-strong">{{ latest_summary.time }}</strong>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<section class="app-card app-animate-card">
+  <h2>今天想怎么表达？</h2>
+  <div class="app-feature-grid app-feature-grid-2x2">
+    <a href="{{ url_for('app_chat.app_chat_page') }}" class="app-feature-link">💬 写一写</a>
+    <a href="{{ url_for('app_chat.app_chat_page') }}?mode=voice" class="app-feature-link">🎧 说一说</a>
+    <a href="{{ url_for('app_chat.app_chat_page') }}?mode=photo" class="app-feature-link">📷 拍一张</a>
+    <a href="{{ url_for('app_relax.app_relax_page') }}" class="app-feature-link">🫧 放松一下</a>
+  </div>
+</section>
+
+<section class="app-card app-animate-card">
+  <div class="app-card-head">
+    <h2>综合看看</h2>
+    <a href="{{ url_for('app.app_multimodal_page') }}" class="app-inline-link">进入</a>
+  </div>
+  <p class="app-card-desc">把文字、语音和自拍心情放在一起，看看最近的状态。</p>
+</section>
+
+<section class="app-card app-animate-card">
+  <div class="app-card-head">
+    <h2>放松推荐</h2>
+    <a href="{{ url_for('app_relax.app_relax_page') }}" class="app-inline-link">更多</a>
+  </div>
+  <p class="app-card-desc">现在想先轻一点吗？</p>
+  <div class="app-chip-row">
+    <span>🌙 呼吸练习</span>
+    <span>🫧 烦恼泡泡</span>
+    <span>🎵 放松音乐</span>
+  </div>
+  <a href="{{ url_for('app.app_relax_music_page') }}" class="app-feature-link app-feature-call">🎵 去听放松音乐</a>
+</section>
+
+<section class="app-card app-animate-card">
+  <div class="app-card-head">
+    <h2>最近心情记录</h2>
+  </div>
+  {% if recent_records %}
+  <div class="app-log-list">
+    {% for row in recent_records %}
+    <article class="app-log-item">
+      <div>
+        <p class="app-log-main">{{ row.emotion }} · {{ row.input_type }}</p>
+        <p class="app-log-sub">{{ row.time }}</p>
+      </div>
+      <div>
+        {% if row.risk_level == "高风险" %}
+        <span class="risk-pill risk-high">高风险</span>
+        {% elif row.risk_level == "中风险" %}
+        <span class="risk-pill risk-mid">中风险</span>
+        {% elif row.risk_level == "低风险" %}
+        <span class="risk-pill risk-low">低风险</span>
+        {% else %}
+        <span class="risk-pill risk-unknown">{{ row.risk_level or "未知" }}</span>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="app-empty-text">这里还很安静，等你慢慢写下第一条心情。</p>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_home.js') }}"></script>
+{% endblock %}

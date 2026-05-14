@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}历史记录 - 多模态情绪识别与风险预警系统{% endblock %}
+
+{% block content %}
+<section class="feature-section">
+  <h2>历史记录</h2>
+
+  {% if cleared %}
+  <div class="notice notice-success">历史记录已清空。</div>
+  {% endif %}
+
+  <div class="history-stats">
+    <article class="stats-card">
+      <p class="stats-label">总检测次数</p>
+      <p class="stats-value">{{ stats.total }}</p>
+    </article>
+    <article class="stats-card">
+      <p class="stats-label">图像检测次数</p>
+      <p class="stats-value">{{ stats.image }}</p>
+    </article>
+    <article class="stats-card">
+      <p class="stats-label">文本检测次数</p>
+      <p class="stats-value">{{ stats.text }}</p>
+    </article>
+    <article class="stats-card">
+      <p class="stats-label">高风险次数</p>
+      <p class="stats-value stats-value-alert">{{ stats.high_risk }}</p>
+    </article>
+  </div>
+
+  <div class="history-actions">
+    <a href="{{ url_for('home.index') }}" class="ghost-btn">返回首页</a>
+    <form action="{{ url_for('history.history_page') }}" method="post" onsubmit="return confirm('确认清空全部历史记录吗？该操作不可撤销。');">
+      <input type="hidden" name="action" value="clear">
+      <button type="submit" class="danger-btn">清空历史记录</button>
+    </form>
+  </div>
+
+  {% if rows %}
+  <div class="history-table-wrap">
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th class="col-time">时间</th>
+          <th class="col-type">输入类型</th>
+          <th class="col-emotion">情绪类别</th>
+          <th class="col-emotion-cn">中文情绪</th>
+          <th class="col-confidence">置信度/分数</th>
+          <th class="col-risk-score">风险分数</th>
+          <th class="col-risk-level">风险等级</th>
+          <th class="col-suggestion">干预建议</th>
+          <th class="col-path">文件路径或输入来源</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td class="col-time">{{ row.time }}</td>
+          <td class="col-type">{{ row.input_type }}</td>
+          <td class="col-emotion">{{ row.emotion }}</td>
+          <td class="col-emotion-cn">{{ row.emotion_cn }}</td>
+          <td class="col-confidence">{{ row.confidence }}</td>
+          <td class="col-risk-score">{{ row.risk_score }}</td>
+          <td class="col-risk-level">
+            {% if row.risk_level == "高风险" %}
+            <span class="risk-pill risk-high">高风险</span>
+            {% elif row.risk_level == "中风险" %}
+            <span class="risk-pill risk-mid">中风险</span>
+            {% elif row.risk_level == "低风险" %}
+            <span class="risk-pill risk-low">低风险</span>
+            {% else %}
+            <span class="risk-pill risk-unknown">{{ row.risk_level or "未知" }}</span>
+            {% endif %}
+          </td>
+          <td class="suggestion-cell col-suggestion">{{ row.suggestion }}</td>
+          <td class="path-cell col-path" title="{{ row.file_path }}">{{ row.file_path }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="audio-desc">暂无检测记录</p>
+  {% endif %}
+</section>
+{% endblock %}

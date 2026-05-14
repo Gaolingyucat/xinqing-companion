@@ -1,0 +1,30 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 我的倾诉{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>我的倾诉</h1>
+  <p class="app-card-desc">把不同主题分开聊，会更轻松一些。</p>
+</section>
+
+<section class="app-card">
+  <div class="app-form-group">
+    <label for="sessionTitleInput">新建对话标题</label>
+    <input id="sessionTitleInput" type="text" maxlength="24" placeholder="例如：学习压力" />
+  </div>
+  <div class="app-action-row">
+    <button class="app-primary-action app-btn" id="sessionCreateBtn" type="button">新建对话</button>
+  </div>
+</section>
+
+<section class="app-card">
+  <h2>对话列表</h2>
+  <div class="session-list" id="sessionList"></div>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_sessions.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 心情记录{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>心情记录</h1>
+  <p class="app-card-desc">每一次表达都算数，慢慢看见自己的变化。</p>
+</section>
+
+{% if journal_records %}
+<section class="app-card app-animate-card journal-overview-card">
+  <h2>今日心情概览</h2>
+  <div class="app-overview-grid app-overview-grid-3">
+    <div class="app-overview-item">
+      <p>今日记录</p>
+      <strong>{{ today_summary.count }} 条</strong>
+    </div>
+    <div class="app-overview-item">
+      <p>今日状态</p>
+      <strong>{{ today_summary.main_status }}</strong>
+    </div>
+    <div class="app-overview-item">
+      <p>心情天气</p>
+      <strong>{{ today_summary.weather }}</strong>
+    </div>
+  </div>
+  <p class="app-overview-time">今日提醒：{{ today_summary.reminder }}</p>
+</section>
+
+<section class="app-card app-animate-card">
+  <div class="app-card-head">
+    <h2>重点关注</h2>
+  </div>
+  {% if focus_rows %}
+  <div class="journal-focus-list">
+    {% for row in focus_rows %}
+    <article class="journal-focus-item">
+      <p class="journal-main">{{ row.time_short }} · {{ row.focus_status }}</p>
+      <p class="journal-sub">{{ row.suggestion }}</p>
+      <details class="journal-details">
+        <summary>查看详情</summary>
+        <div class="journal-details-body">
+          <p><strong>时间：</strong>{{ row.time }}</p>
+          <p><strong>类型：</strong>{{ row.input_type }}</p>
+          <p><strong>风险等级：</strong>{{ row.risk_level }}</p>
+          <p><strong>建议：</strong>{{ row.suggestion_full }}</p>
+        </div>
+      </details>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="app-empty-text">今天暂时没有需要特别关注的记录。</p>
+  {% endif %}
+</section>
+
+<section class="app-card app-animate-card">
+  <div class="journal-tabs" id="journalTabs">
+    <button class="journal-tab is-active" data-filter="all" type="button">全部</button>
+    <button class="journal-tab" data-filter="focus" type="button">重点</button>
+    <button class="journal-tab" data-filter="text" type="button">文字</button>
+    <button class="journal-tab" data-filter="voice" type="button">语音</button>
+    <button class="journal-tab" data-filter="photo" type="button">自拍</button>
+    <button class="journal-tab" data-filter="relax" type="button">放松</button>
+  </div>
+
+  <div class="app-form-group journal-search-wrap">
+    <label for="journalSearchInput">搜索记录</label>
+    <input id="journalSearchInput" type="text" placeholder="搜索记录里的关键词">
+  </div>
+
+  <div class="journal-group-list" id="journalGroupedList"></div>
+  <p class="app-empty-text" id="journalNoResultText" hidden>没有找到这类记录，换个筛选看看吧。</p>
+</section>
+{% else %}
+<section class="app-card">
+  <p class="app-empty-text">这里还很安静。等你想说的时候，第一条心情会出现在这里。</p>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block app_scripts %}
+{% if journal_records %}
+<script id="journalRecordsData" type="application/json">{{ journal_records | tojson }}</script>
+<script src="{{ url_for('static', filename='js/app_journal.js') }}"></script>
+{% endif %}
+{% endblock %}

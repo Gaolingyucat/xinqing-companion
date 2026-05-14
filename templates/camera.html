@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}摄像头实时疲劳检测 - 多模态情绪识别与风险预警系统{% endblock %}
+
+{% block content %}
+<section class="feature-section">
+  <h2>摄像头实时疲劳检测</h2>
+
+  <div class="camera-grid">
+    <article class="camera-card">
+      <h3>实时画面</h3>
+      <div class="camera-frame-wrap">
+        <img id="camera-stream" src="{{ video_feed_url }}" alt="摄像头实时画面" class="camera-frame">
+      </div>
+      <p class="audio-desc">当前版本为安全预览版，仅完成摄像头实时画面接入。</p>
+    </article>
+
+    <article class="camera-card">
+      <h3>检测状态</h3>
+      <div class="result-box">
+        <p>摄像头状态：<span id="camera-state">未开启</span></p>
+        <p>当前检测模式：<span id="detect-mode">摄像头预览模式</span></p>
+        <p>疲劳检测状态：<span id="fatigue-status">待启用</span></p>
+        <p>风险等级：<span id="risk-level">未评估</span></p>
+        <p>提示：<span id="suggestion-text">当前版本先完成摄像头接入，疲劳检测后续将基于眼睛开合程度 EAR 实现。</span></p>
+      </div>
+      <div id="camera-warning" class="notice notice-error camera-warning" style="display:none;"></div>
+      <a href="{{ url_for('home.index') }}" class="ghost-btn">返回首页</a>
+    </article>
+  </div>
+</section>
+
+<script>
+  (function () {
+    const statusUrl = "{{ status_url }}";
+    const cameraState = document.getElementById("camera-state");
+    const detectMode = document.getElementById("detect-mode");
+    const fatigueStatus = document.getElementById("fatigue-status");
+    const riskLevel = document.getElementById("risk-level");
+    const suggestionText = document.getElementById("suggestion-text");
+    const warningBox = document.getElementById("camera-warning");
+
+    async function refreshStatus() {
+      try {
+        const resp = await fetch(statusUrl, { cache: "no-store" });
+        if (!resp.ok) {
+          return;
+        }
+        const data = await resp.json();
+        cameraState.textContent = data.camera_ready ? "已开启" : "未开启";
+        detectMode.textContent = data.mode || "摄像头预览模式";
+        fatigueStatus.textContent = data.fatigue_status || "待启用";
+        riskLevel.textContent = data.risk_level || "未评估";
+        suggestionText.textContent = data.suggestion || "";
+
+        if (data.warning) {
+          warningBox.style.display = "block";
+          warningBox.textContent = data.warning;
+        } else {
+          warningBox.style.display = "none";
+          warningBox.textContent = "";
+        }
+      } catch (_) {
+        warningBox.style.display = "block";
+        warningBox.textContent = "摄像头状态获取失败，请刷新页面后重试。";
+      }
+    }
+
+    refreshStatus();
+    setInterval(refreshStatus, 800);
+  })();
+</script>
+{% endblock %}

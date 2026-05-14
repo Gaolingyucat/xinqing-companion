@@ -1,0 +1,35 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 一分钟整理{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>一分钟整理</h1>
+  <p class="app-card-desc">先把最压你的事情说清楚。</p>
+</section>
+
+<section class="app-card">
+  <div class="app-form-group">
+    <label for="focusInput">现在最压你的事情是什么？</label>
+    <textarea id="focusInput" rows="3" maxlength="200" placeholder="例如：项目堆在一起，今晚要交好多内容"></textarea>
+  </div>
+  <div class="app-action-row">
+    <button class="app-primary-action app-btn" id="focusGenerateBtn" type="button">开始整理</button>
+  </div>
+
+  <div class="focus-result" id="focusResult" hidden>
+    <p class="focus-title">先不用一次解决全部，我们先看这一分钟：</p>
+    <ol>
+      <li>这件事最小的一步是什么？</li>
+      <li>这一步能不能在 5 分钟内开始？</li>
+      <li>现在先做哪一个动作？</li>
+    </ol>
+    <p class="focus-echo" id="focusEchoText"></p>
+  </div>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_relax.js') }}"></script>
+{% endblock %}

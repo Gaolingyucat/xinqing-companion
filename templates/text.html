@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}文本情绪分析 - 多模态情绪识别与风险预警系统{% endblock %}
+
+{% block content %}
+<section class="feature-section">
+  <h2>文本情绪分析</h2>
+
+  {% if error_message %}
+  <div class="notice notice-error">{{ error_message }}</div>
+  {% endif %}
+
+  <div class="text-grid">
+    <article class="text-card">
+      <h3>输入文本</h3>
+      <form action="{{ url_for('text.text_page') }}" method="post" class="audio-form">
+        <textarea name="input_text" class="text-input" rows="8" placeholder="请输入一段中文文本用于情绪分析...">{{ input_text }}</textarea>
+        <div class="text-actions">
+          <button type="submit" class="primary-btn">开始分析</button>
+          <a href="{{ url_for('home.index') }}" class="ghost-btn">返回首页</a>
+        </div>
+      </form>
+    </article>
+
+    <article class="text-card">
+      <h3>分析结果</h3>
+      {% if result %}
+      <div class="result-box">
+        <p>输入文本：{{ input_text }}</p>
+        <p>文本情绪类别：{{ result.emotion_cn }}（{{ result.emotion }}）</p>
+        <p>命中的关键词：{{ result.matched_keywords|join("、") if result.matched_keywords else "无" }}</p>
+        <p>情绪分数：{{ result.text_score }}</p>
+        <p>风险分数：{{ result.risk_score }}</p>
+        <p>风险等级：{{ result.risk_level }}</p>
+        <p>风险说明：{{ result.reason }}</p>
+        <p>干预建议：{{ result.suggestion }}</p>
+      </div>
+      {% else %}
+      <p class="audio-desc">提交文本后，将在此处展示情绪分析与风险预警结果。</p>
+      {% endif %}
+    </article>
+  </div>
+</section>
+{% endblock %}

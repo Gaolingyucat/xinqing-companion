@@ -1,0 +1,53 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 放松音乐{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>放松音乐</h1>
+  <p class="app-card-desc">选一种现在适合你的声音，让自己慢一点。</p>
+</section>
+
+<section class="app-card app-animate-card">
+  <div class="app-card-head">
+    <h2>为你推荐</h2>
+    <span class="app-status-chip status-calm">当前状态：{{ status_label }}</span>
+  </div>
+  <p class="app-card-desc">这些推荐基于你最近的心情记录，你也可以按当下感觉自由选择。</p>
+
+  <div class="music-list" id="musicList">
+    {% for card in music_cards %}
+    <article class="music-item {% if loop.first %}music-item-featured{% endif %}" data-title="{{ card.title }}" data-keyword="{{ card.keyword }}">
+      <div class="music-wave" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <h3>{{ card.title }}</h3>
+      <p class="music-fit">适合状态：{{ card.fit_for }}</p>
+      <p class="music-desc">{{ card.description }}</p>
+
+      <div class="music-main-open">
+        <a class="app-primary-action music-main-link" href="{{ card.links.netease }}" target="_blank" rel="noopener">打开音乐 App</a>
+      </div>
+      <div class="music-links-row">
+        <a class="music-open-link" href="{{ card.links.netease }}" target="_blank" rel="noopener">网易云</a>
+        <a class="music-open-link" href="{{ card.links.qq }}" target="_blank" rel="noopener">QQ音乐</a>
+        <a class="music-open-link" href="{{ card.links.spotify }}" target="_blank" rel="noopener">Spotify</a>
+        <a class="music-open-link" href="{{ card.links.apple }}" target="_blank" rel="noopener">Apple Music</a>
+      </div>
+
+      <div class="music-action-row">
+        <button type="button" class="app-secondary-action app-btn music-copy-btn">复制搜索词</button>
+        <button type="button" class="app-primary-action app-btn music-done-btn">我听完了</button>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <p class="app-empty-text" id="musicActionFeedback">提示：点击“打开音乐 App”会跳转到对应平台的搜索结果页。</p>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_relax_music.js') }}"></script>
+{% endblock %}

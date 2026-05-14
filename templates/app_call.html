@@ -1,0 +1,36 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 语音陪伴{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>语音陪伴</h1>
+  <p class="app-card-desc">我在听，你可以慢慢说。</p>
+</section>
+
+<section class="app-card call-card">
+  <div class="call-avatar-wrap">
+    <div class="call-wave"></div>
+    <div class="call-avatar">💬</div>
+  </div>
+  <div class="app-form-group">
+    <label for="callInput">想说的话</label>
+    <textarea id="callInput" rows="3" maxlength="280" placeholder="比如：今天真的有点撑不住..."></textarea>
+  </div>
+  <div class="app-action-row">
+    <button class="app-primary-action app-btn" id="callSendBtn" type="button">发送给陪伴助手</button>
+    <button class="app-secondary-action app-btn" type="button" id="callEndBtn">结束陪伴</button>
+  </div>
+</section>
+
+<section class="app-card" id="callReplyCard" hidden>
+  <h2>陪伴回复</h2>
+  <p class="app-card-desc" id="callReplyText"></p>
+  <p class="app-overview-time" id="callMetaText"></p>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_call.js') }}"></script>
+{% endblock %}

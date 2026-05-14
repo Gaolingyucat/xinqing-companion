@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}图像情绪识别 - 多模态情绪识别与风险预警系统{% endblock %}
+
+{% block content %}
+<section class="feature-section">
+  <h2>图像情绪识别</h2>
+
+  {% if error_message %}
+  <div class="notice notice-error">{{ error_message }}</div>
+  {% endif %}
+
+  <div class="image-grid">
+    <article class="image-card">
+      <h3>上传图片</h3>
+      <p class="audio-desc">支持上传 jpg、jpeg、png 文件，优先使用 DeepFace 进行真实情绪识别。</p>
+      <form action="{{ url_for('image.image_page') }}" method="post" enctype="multipart/form-data" class="audio-form">
+        <input type="file" name="image_file" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+        <button type="submit" class="primary-btn">上传并识别</button>
+      </form>
+      {% if uploaded_filename %}
+      <p class="file-name">已上传文件：{{ uploaded_filename }}</p>
+      {% endif %}
+      {% if image_url %}
+      <div class="preview-box">
+        <img src="{{ image_url }}" alt="上传图片预览" class="preview-image">
+      </div>
+      {% endif %}
+    </article>
+
+    <article class="image-card">
+      <h3>识别结果</h3>
+      {% if result %}
+      <div class="result-box">
+        <p>情绪类别：{{ result.emotion_cn }}（{{ result.emotion }}）</p>
+        <p>置信度：{{ '%.2f'|format(result.confidence) }}</p>
+        <p>识别来源：{{ "DeepFace真实模型" if result.source == "deepface" else "兜底模拟结果" }}</p>
+        <p>风险分数：{{ result.risk_score }}</p>
+        <p>风险等级：{{ result.risk_level }}</p>
+        <p>干预建议：{{ result.suggestion }}</p>
+      </div>
+      {% if result.warning %}
+      <div class="notice" style="margin-top:12px;color:#92400e;border:1px solid #fcd34d;background:#fffbeb;">
+        {{ result.warning }}
+      </div>
+      {% endif %}
+      {% if result.source == "mock" %}
+      <p class="audio-desc" style="margin-top:10px;">当前结果为兜底结果，不代表真实模型判断。</p>
+      {% elif result.source == "deepface" %}
+      <p class="audio-desc" style="margin-top:10px;">当前结果来自 DeepFace 真实图像情绪识别模型。</p>
+      {% endif %}
+      {% else %}
+      <p class="audio-desc">上传图片后，将在此处展示情绪识别与风险预警结果。</p>
+      {% endif %}
+    </article>
+  </div>
+</section>
+{% endblock %}

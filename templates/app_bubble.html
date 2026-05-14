@@ -1,0 +1,29 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 烦恼泡泡{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>烦恼泡泡</h1>
+  <p class="app-card-desc">写下此刻最卡住你的那件事。</p>
+</section>
+
+<section class="app-card app-animate-card">
+  <div class="app-form-group">
+    <label for="bubbleInput">现在最烦的是什么？</label>
+    <input id="bubbleInput" type="text" placeholder="例如：任务太多，脑子很乱" maxlength="80">
+  </div>
+  <div class="app-action-row">
+    <button class="app-primary-action app-btn" id="bubbleAddBtn" type="button">放进泡泡</button>
+    <button class="app-secondary-action app-btn" id="bubbleClearBtn" type="button">清空全部</button>
+  </div>
+  <p class="app-overview-time" id="bubbleInputHint">把烦恼放进泡泡池，轻轻点掉它。</p>
+  <div id="bubbleBoard" class="bubble-board bubble-pool"></div>
+  <p class="app-empty-text" id="bubbleHintText">点一下泡泡，让它慢慢飘走。</p>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/bubble.js') }}"></script>
+{% endblock %}

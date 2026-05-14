@@ -1,0 +1,61 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 综合看看{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>综合看看</h1>
+  <p class="app-card-desc">把文字、语音、自拍三种表达放在一起，更完整地看今天的状态。</p>
+</section>
+
+<section class="app-card">
+  <h2>三种心情输入</h2>
+  <div class="modality-list">
+    <article class="modality-row">
+      <p>💬 文字</p>
+      <span>{{ multimodal.text.emotion if multimodal.text else "暂无" }}</span>
+      <small>{{ multimodal.text.risk_level if multimodal.text else "未记录" }}</small>
+    </article>
+    <article class="modality-row">
+      <p>🎧 语音</p>
+      <span>{{ multimodal.audio.emotion if multimodal.audio else "暂无" }}</span>
+      <small>{{ multimodal.audio.risk_level if multimodal.audio else "未记录" }}</small>
+    </article>
+    <article class="modality-row">
+      <p>📷 自拍</p>
+      <span>{{ multimodal.image.emotion if multimodal.image else "暂无" }}</span>
+      <small>{{ multimodal.image.risk_level if multimodal.image else "未记录" }}</small>
+    </article>
+  </div>
+</section>
+
+<section class="app-card">
+  <h2>融合流程</h2>
+  <p class="app-flow-line">{{ multimodal.flow }}</p>
+</section>
+
+<section class="app-card">
+  <h2>综合结论</h2>
+  {% if multimodal.has_data %}
+  <div class="app-overview-grid app-overview-grid-3">
+    <div class="app-overview-item">
+      <p>综合状态</p>
+      <strong>{{ multimodal.status }}</strong>
+    </div>
+    <div class="app-overview-item">
+      <p>综合风险</p>
+      <strong>{{ multimodal.risk_level }}</strong>
+    </div>
+    <div class="app-overview-item">
+      <p>心情天气</p>
+      <strong>{{ multimodal.weather }}</strong>
+    </div>
+  </div>
+  <p class="app-overview-time"><strong>主要依据：</strong>{{ multimodal.reason }}</p>
+  <p class="app-card-desc"><strong>陪伴建议：</strong>{{ multimodal.suggestion }}</p>
+  {% else %}
+  <p class="app-empty-text">还没有足够记录。先完成文字、语音或自拍中的任意一项吧。</p>
+  {% endif %}
+</section>
+{% endblock %}

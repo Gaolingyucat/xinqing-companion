@@ -1,0 +1,22 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 应用准备情况{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>应用准备情况</h1>
+  <p class="app-card-desc">用于你在打包前快速自查，不在首页展示。</p>
+</section>
+
+<section class="app-card">
+  <div class="ready-list">
+    {% for label, ok in checks %}
+    <article class="ready-item">
+      <span>{{ label }}</span>
+      <strong class="{{ 'ready-ok' if ok else 'ready-pending' }}">{{ '已就绪' if ok else '待检查' }}</strong>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>{% block app_title %}心晴陪伴{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  </head>
+  <body class="app-mobile-body">
+    <main class="app-mobile-shell {% block shell_class %}{% endblock %}">
+      {% block app_content %}{% endblock %}
+    </main>
+
+    <nav class="app-bottom-nav app-bottom-nav-5" aria-label="底部导航">
+      <a href="{{ url_for('app.app_home') }}" class="{% if nav_active == 'home' %}is-active{% endif %}">首页</a>
+      <a href="{{ url_for('app_chat.app_chat_page') }}" class="{% if nav_active == 'chat' %}is-active{% endif %}">倾诉</a>
+      <a href="{{ url_for('app_relax.app_relax_page') }}" class="{% if nav_active == 'relax' %}is-active{% endif %}">放松</a>
+      <a href="{{ url_for('app.app_journal_page') }}" class="{% if nav_active == 'journal' %}is-active{% endif %}">记录</a>
+      <a href="{{ url_for('app.app_profile_page') }}" class="{% if nav_active == 'profile' %}is-active{% endif %}">我的</a>
+    </nav>
+
+    <script src="{{ url_for('static', filename='js/app_common.js') }}"></script>
+    {% block app_scripts %}{% endblock %}
+  </body>
+</html>

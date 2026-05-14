@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}系统总览仪表盘 - 多模态情绪识别与风险预警系统{% endblock %}
+
+{% block content %}
+<div class="home-dashboard">
+  <section class="home-runtime-bar" aria-label="系统运行状态">
+    <ul class="runtime-list">
+      <li class="runtime-item"><span class="runtime-dot"></span>本地运行</li>
+      <li class="runtime-item"><span class="runtime-dot"></span>模型服务正常</li>
+      <li class="runtime-item"><span class="runtime-dot"></span>数据记录正常</li>
+      <li class="runtime-item"><span class="runtime-dot"></span>报告模块可用</li>
+    </ul>
+  </section>
+
+  <section class="home-overview">
+    <article class="overview-main-card">
+      <p class="overview-kicker">当前综合状态</p>
+      <h2>本地端多模态预警平台</h2>
+      <div class="overview-row">
+        <div class="overview-block">
+          <p class="overview-label">最近一次风险等级</p>
+          <p class="overview-value">
+            {% if dashboard.latest_risk_level == "高风险" %}
+            <span class="risk-pill risk-high">高风险</span>
+            {% elif dashboard.latest_risk_level == "中风险" %}
+            <span class="risk-pill risk-mid">中风险</span>
+            {% elif dashboard.latest_risk_level == "低风险" %}
+            <span class="risk-pill risk-low">低风险</span>
+            {% else %}
+            <span class="risk-pill risk-unknown">{{ dashboard.latest_risk_level }}</span>
+            {% endif %}
+          </p>
+        </div>
+        <div class="overview-block">
+          <p class="overview-label">最近一次情绪类别</p>
+          <p class="overview-value text-value">{{ dashboard.latest_emotion }}</p>
+        </div>
+      </div>
+      <p class="overview-note">{{ dashboard.latest_status_note }}</p>
+    </article>
+
+    <aside class="overview-side-card">
+      <p class="overview-side-title">系统流程</p>
+      <div class="pipeline-track" aria-label="系统流程说明">
+        <span>多模态输入</span>
+        <span>情绪识别</span>
+        <span>风险评估</span>
+        <span>融合决策</span>
+        <span>建议生成</span>
+        <span>记录报告</span>
+      </div>
+    </aside>
+  </section>
+
+  <section class="home-section">
+    <div class="section-head">
+      <h2>平台统计面板</h2>
+      <p>当前数据快照</p>
+    </div>
+    <div class="dashboard-stats dashboard-metrics">
+      <article class="stats-card metric-card">
+        <p class="stats-label">总检测次数</p>
+        <p class="stats-value">{{ dashboard.total_count }}</p>
+      </article>
+      <article class="stats-card metric-card">
+        <p class="stats-label">高风险次数</p>
+        <p class="stats-value stats-value-alert">{{ dashboard.high_risk_count }}</p>
+      </article>
+      <article class="stats-card metric-card">
+        <p class="stats-label">出现最多情绪</p>
+        <p class="stats-value stats-small">{{ dashboard.top_emotion }}</p>
+      </article>
+      <article class="stats-card metric-card">
+        <p class="stats-label">最近检测时间</p>
+        <p class="stats-value stats-small">{{ dashboard.latest_time }}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-head">
+      <h2>多模态接入状态</h2>
+      <p>当前模块能力</p>
+    </div>
+    <div class="modality-grid">
+      <article class="modality-card">
+        <h3>图像模态</h3>
+        <p>DeepFace 已接入</p>
+        <span class="module-tag module-done">已接入</span>
+      </article>
+      <article class="modality-card">
+        <h3>文本模态</h3>
+        <p>规则分析已接入</p>
+        <span class="module-tag module-done">已接入</span>
+      </article>
+      <article class="modality-card">
+        <h3>语音模态</h3>
+        <p>网页录音 / 上传分析</p>
+        <span class="module-tag module-expand">扩展中</span>
+      </article>
+      <article class="modality-card">
+        <h3>摄像头模态</h3>
+        <p>预览 / 后续疲劳检测</p>
+        <span class="module-tag module-pending">待完善</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-head">
+      <h2>最近 5 条记录</h2>
+      <p>紧凑时间线</p>
+    </div>
+    {% if dashboard.recent_records %}
+    <div class="compact-timeline">
+      {% for row in dashboard.recent_records %}
+      <article class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <p class="timeline-main">{{ row.time }}</p>
+          <p class="timeline-sub">{{ row.input_type }} · {{ row.emotion_cn }} · 风险分数 {{ row.risk_score }}</p>
+          <p class="timeline-risk">
+            {% if row.risk_level == "高风险" %}
+            <span class="risk-pill risk-high">高风险</span>
+            {% elif row.risk_level == "中风险" %}
+            <span class="risk-pill risk-mid">中风险</span>
+            {% elif row.risk_level == "低风险" %}
+            <span class="risk-pill risk-low">低风险</span>
+            {% else %}
+            <span class="risk-pill risk-unknown">{{ row.risk_level or "未知" }}</span>
+            {% endif %}
+          </p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="audio-desc">暂无检测记录</p>
+    {% endif %}
+  </section>
+
+  <section class="home-section">
+    <div class="section-head">
+      <h2>模块中心</h2>
+      <p>平台功能入口</p>
+    </div>
+    <div class="feature-grid module-grid">
+      <a href="{{ url_for('image.image_page') }}" class="feature-link">
+        <article class="feature-card module-card">
+          <div class="module-card-head">
+            <h3>图像情绪识别</h3>
+            <span class="module-tag module-done">已完成</span>
+          </div>
+          <p>支持图片上传识别，输出情绪类别与风险等级。</p>
+        </article>
+      </a>
+      <a href="{{ url_for('text.text_page') }}" class="feature-link">
+        <article class="feature-card module-card">
+          <div class="module-card-head">
+            <h3>文本情绪分析</h3>
+            <span class="module-tag module-done">已完成</span>
+          </div>
+          <p>基于规则进行文本情绪识别与风险评分。</p>
+        </article>
+      </a>
+      <a href="{{ url_for('audio.audio_page') }}" class="feature-link">
+        <article class="feature-card module-card">
+          <div class="module-card-head">
+            <h3>语音情绪识别</h3>
+            <span class="module-tag module-expand">扩展中</span>
+          </div>
+          <p>支持网页录音与音频上传，持续增强识别稳定性。</p>
+        </article>
+      </a>
+      <a href="{{ url_for('camera.camera_page') }}" class="feature-link">
+        <article class="feature-card module-card">
+          <div class="module-card-head">
+            <h3>摄像头预览</h3>
+            <span class="module-tag module-pending">待完善</span>
+          </div>
+          <p>提供本地摄像头预览，预留疲劳检测扩展能力。</p>
+        </article>
+      </a>
+      <a href="{{ url_for('multimodal.multimodal_page') }}" class="feature-link">
+        <article class="feature-card module-card">
+          <div class="module-card-head">
+            <h3>多模态融合评估</h3>
+            <span class="module-tag module-expand">扩展中</span>
+          </div>
+          <p>融合图像、文本、语音结果，输出综合风险判断。</p>
+        </article>
+      </a>
+      <a href="{{ url_for('history.history_page') }}" class="feature-link">
+        <article class="feature-card module-card">
+          <div class="module-card-head">
+            <h3>历史记录</h3>
+            <span class="module-tag module-done">已完成</span>
+          </div>
+          <p>查看检测明细与风险趋势，支持筛选与管理。</p>
+        </article>
+      </a>
+      <a href="{{ url_for('report.report_page') }}" class="feature-link">
+        <article class="feature-card module-card">
+          <div class="module-card-head">
+            <h3>报告生成</h3>
+            <span class="module-tag module-done">已完成</span>
+          </div>
+          <p>按检测结果生成结构化风险评估报告，便于留档。</p>
+        </article>
+      </a>
+    </div>
+  </section>
+</div>
+{% endblock %}

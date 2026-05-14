@@ -1,0 +1,34 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 放松空间{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>放松空间</h1>
+  <p class="app-card-desc">先把情绪放下来一点点。</p>
+</section>
+
+<section class="app-card app-animate-card">
+  <a href="{{ url_for('app_relax.app_breath_page') }}" class="app-relax-card app-relax-breath app-animate-card">
+    <h2>呼吸练习</h2>
+    <p>跟着节奏慢一点，给自己一分钟缓冲。</p>
+  </a>
+  <a href="{{ url_for('app_relax.app_bubble_page') }}" class="app-relax-card app-relax-bubble app-animate-card">
+    <h2>烦恼泡泡</h2>
+    <p>把烦恼写出来，轻轻点一下，放它飘走。</p>
+  </a>
+  <a href="{{ url_for('app_relax.app_focus_page') }}" class="app-relax-card app-relax-focus app-animate-card">
+    <h2>一分钟整理</h2>
+    <p>把最压你的事拆小一点，从眼前一步开始。</p>
+  </a>
+  <a href="{{ url_for('app_relax.app_mood_game_page') }}" class="app-relax-card app-relax-mood app-animate-card">
+    <h2>情绪星球</h2>
+    <p>给今天的心情选一片天气，看看此刻的状态提醒。</p>
+  </a>
+  <a href="{{ url_for('app.app_relax_music_page') }}" class="app-relax-card app-relax-music app-animate-card">
+    <h2>放松音乐</h2>
+    <p>选一种现在适合你的声音，让自己慢一点。</p>
+  </a>
+</section>
+{% endblock %}

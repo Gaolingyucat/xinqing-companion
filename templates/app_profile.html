@@ -1,0 +1,70 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 我的{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>我的</h1>
+</section>
+
+<section class="app-card app-profile-head">
+  <p class="profile-name" id="profileNicknameText">心晴用户</p>
+  <p class="app-card-desc">陪伴偏好：<span id="profileStyleText">像朋友一样</span></p>
+
+  <div class="profile-stats-grid">
+    <div>
+      <p>陪伴天数</p>
+      <strong>{{ profile.days }}</strong>
+    </div>
+    <div>
+      <p>连续记录天数</p>
+      <strong>{{ profile.continuous_days }}</strong>
+    </div>
+    <div>
+      <p>总记录次数</p>
+      <strong>{{ profile.total_count }}</strong>
+    </div>
+    <div>
+      <p>高风险提醒次数</p>
+      <strong>{{ profile.high_risk_count }}</strong>
+    </div>
+    <div>
+      <p>多模态记录次数</p>
+      <strong>{{ profile.multimodal_count }}</strong>
+    </div>
+  </div>
+</section>
+
+<section class="app-card">
+  <h2>隐私说明</h2>
+  <p class="app-card-desc">心晴陪伴用于心情记录、压力舒缓和陪伴式表达。文字、语音、图片等内容仅用于当前系统的情绪分析、陪伴回复和记录展示。</p>
+  <a href="{{ url_for('app.app_privacy_page') }}" class="app-inline-link">查看完整隐私说明</a>
+</section>
+
+<section class="app-card">
+  <h2>使用说明</h2>
+  <p class="app-card-desc">心晴陪伴不提供医疗诊断、心理治疗或疾病判断，也不能替代专业帮助。</p>
+  <a href="{{ url_for('app.app_usage_page') }}" class="app-inline-link">查看完整使用说明</a>
+</section>
+
+<section class="app-card">
+  <h2>隐私与记录</h2>
+  <p class="app-card-desc">你可以在这里管理本地记录和陪伴偏好。</p>
+  <div class="app-action-row">
+    <a href="{{ url_for('app.app_onboarding_page') }}" class="app-secondary-action">重新设置昵称/偏好</a>
+    <button type="button" class="app-secondary-action app-btn app-danger-soft" id="clearLocalRecordsBtn">清空本地记录</button>
+  </div>
+  <p class="app-overview-time" id="profileDataHint">本地记录只保存在当前设备。</p>
+</section>
+
+<section class="app-card">
+  <h2>关于心晴陪伴</h2>
+  <p class="app-card-desc">心晴陪伴是一款 AI 情绪陪伴与心情记录 App，支持文字、语音、图片等方式表达状态，并提供放松练习和心情记录。</p>
+  <a href="{{ url_for('app.app_ready_page') }}" class="app-hidden-link">应用准备情况</a>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_profile.js') }}"></script>
+{% endblock %}

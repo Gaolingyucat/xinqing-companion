@@ -1,0 +1,36 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 欢迎{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>欢迎来到心晴陪伴</h1>
+  <p class="app-card-desc">这里可以记录心情，也可以在难受的时候慢慢说出来。</p>
+</section>
+
+<section class="app-card">
+  <div class="app-form-group">
+    <label for="onboardNickname">你的昵称</label>
+    <input id="onboardNickname" type="text" maxlength="20" placeholder="例如：小晴" />
+  </div>
+
+  <div class="app-form-group">
+    <label>陪伴偏好</label>
+    <div class="onboard-options" id="onboardOptions">
+      <button type="button" class="onboard-option" data-style="温柔一点">温柔一点</button>
+      <button type="button" class="onboard-option" data-style="直接一点">直接一点</button>
+      <button type="button" class="onboard-option" data-style="像朋友一样">像朋友一样</button>
+      <button type="button" class="onboard-option" data-style="安静陪着">安静陪着</button>
+    </div>
+  </div>
+
+  <div class="app-action-row">
+    <button class="app-primary-action app-btn" id="onboardSubmitBtn" type="button">开始使用</button>
+  </div>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_onboarding.js') }}"></script>
+{% endblock %}

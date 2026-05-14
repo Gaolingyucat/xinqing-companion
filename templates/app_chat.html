@@ -1,0 +1,50 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 我的倾诉{% endblock %}
+{% block shell_class %}app-chat-shell{% endblock %}
+
+{% block app_content %}
+<header class="app-chat-header">
+  <div>
+    <p class="app-mobile-brand">心晴陪伴</p>
+    <h1 id="chatSessionTitle">AI 陪伴聊天</h1>
+  </div>
+  <div class="app-chat-actions">
+    <a href="{{ url_for('app.app_sessions_page') }}" class="app-chat-back">我的倾诉</a>
+    <a href="{{ url_for('app.app_home') }}" class="app-chat-back">返回首页</a>
+  </div>
+</header>
+
+<section class="app-chat-window" id="chatWindow" aria-live="polite">
+  <article class="chat-bubble chat-ai">
+    <p>你好，欢迎来到心晴陪伴。你可以和我聊聊今天的心情，我会陪你一起整理感受。</p>
+  </article>
+</section>
+
+<form class="app-chat-inputbar" id="chatForm">
+  <div class="app-chat-tool-row">
+    <button type="button" class="app-chat-tool-btn" id="chatVoiceBtn" aria-label="语音输入">🎙</button>
+    <button type="button" class="app-chat-tool-btn" id="chatImageBtn" aria-label="图片输入">📷</button>
+    <input id="chatImageInput" type="file" accept=".jpg,.jpeg,.png,image/*" hidden>
+  </div>
+  <label for="chatInput" class="sr-only">输入倾诉内容</label>
+  <textarea id="chatInput" name="chatInput" rows="1" placeholder="写下你现在的感受..." maxlength="500" required></textarea>
+  <button type="submit" class="app-chat-send-btn">发送</button>
+</form>
+
+<section class="app-chat-recorder" id="chatRecorderPanel" hidden>
+  <p class="app-chat-recorder-title">语音面板</p>
+  <p class="app-chat-recorder-status" id="chatRecorderStatus">还没有录音，点击“开始录音”试试。</p>
+  <div class="app-chat-recorder-actions">
+    <button type="button" class="app-secondary-action app-btn" id="chatRecorderStart">开始录音</button>
+    <button type="button" class="app-secondary-action app-btn" id="chatRecorderStop">停止录音</button>
+    <button type="button" class="app-secondary-action app-btn" id="chatRecorderPlay">播放录音</button>
+    <button type="button" class="app-primary-action app-btn" id="chatRecorderSend">发送语音</button>
+  </div>
+  <audio id="chatRecorderAudio" controls hidden></audio>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_chat.js') }}"></script>
+{% endblock %}

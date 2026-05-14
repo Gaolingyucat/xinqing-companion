@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}多模态融合评估 - 多模态情绪识别与风险预警系统{% endblock %}
+
+{% block content %}
+<section class="feature-section">
+  <h2>多模态融合评估中心</h2>
+  <p class="audio-desc">系统基于多模态情绪结果、置信度和冲突规则进行可解释融合评估。</p>
+
+  {% if fusion.has_data %}
+  <div class="multimodal-grid">
+    <article class="multimodal-card">
+      <h3>最近图像结果</h3>
+      {% if fusion.modalities.image %}
+      <p>时间：{{ fusion.modalities.image.time }}</p>
+      <p>情绪：{{ fusion.modalities.image.emotion_cn }}（{{ fusion.modalities.image.emotion }}）</p>
+      <p>风险：{{ fusion.modalities.image.risk_score }} / {{ fusion.modalities.image.risk_level }}</p>
+      <p>置信度：{{ '%.2f'|format(fusion.modalities.image.confidence) }}</p>
+      {% else %}
+      <p class="audio-desc">暂无图像记录</p>
+      {% endif %}
+    </article>
+
+    <article class="multimodal-card">
+      <h3>最近文本结果</h3>
+      {% if fusion.modalities.text %}
+      <p>时间：{{ fusion.modalities.text.time }}</p>
+      <p>情绪：{{ fusion.modalities.text.emotion_cn }}（{{ fusion.modalities.text.emotion }}）</p>
+      <p>风险：{{ fusion.modalities.text.risk_score }} / {{ fusion.modalities.text.risk_level }}</p>
+      <p>置信度：{{ '%.2f'|format(fusion.modalities.text.confidence) }}</p>
+      {% else %}
+      <p class="audio-desc">暂无文本记录</p>
+      {% endif %}
+    </article>
+
+    <article class="multimodal-card">
+      <h3>最近语音结果</h3>
+      {% if fusion.modalities.audio %}
+      <p>时间：{{ fusion.modalities.audio.time }}</p>
+      <p>情绪：{{ fusion.modalities.audio.emotion_cn }}（{{ fusion.modalities.audio.emotion }}）</p>
+      <p>风险：{{ fusion.modalities.audio.risk_score }} / {{ fusion.modalities.audio.risk_level }}</p>
+      <p>置信度：{{ '%.2f'|format(fusion.modalities.audio.confidence) }}</p>
+      {% else %}
+      <p class="audio-desc">暂无语音记录</p>
+      {% endif %}
+    </article>
+  </div>
+
+  <article class="multimodal-card" style="margin-top:14px;">
+    <h3>融合结果</h3>
+    <p>参与融合模态：{{ fusion.participating_modalities|join("、") }}</p>
+    <p>各模态原始风险分数：
+      图像={{ '%.2f'|format(fusion.raw_scores.image) if fusion.raw_scores.image is defined else "—" }}，
+      文本={{ '%.2f'|format(fusion.raw_scores.text) if fusion.raw_scores.text is defined else "—" }}，
+      语音={{ '%.2f'|format(fusion.raw_scores.audio) if fusion.raw_scores.audio is defined else "—" }}
+    </p>
+    <p>各模态最终权重：
+      图像={{ '%.2f'|format(fusion.weights.image) if fusion.weights.image is defined else "—" }}，
+      文本={{ '%.2f'|format(fusion.weights.text) if fusion.weights.text is defined else "—" }}，
+      语音={{ '%.2f'|format(fusion.weights.audio) if fusion.weights.audio is defined else "—" }}
+    </p>
+    <p>综合风险分数：{{ fusion.fused_score }}</p>
+    <p>综合风险等级：
+      {% if fusion.fused_level == "高风险" %}
+      <span class="risk-pill risk-high">高风险</span>
+      {% elif fusion.fused_level == "中风险" %}
+      <span class="risk-pill risk-mid">中风险</span>
+      {% else %}
+      <span class="risk-pill risk-low">低风险</span>
+      {% endif %}
+    </p>
+    <p>综合状态描述：{{ fusion.status_text }}</p>
+    <p>综合干预建议：{{ fusion.advice }}</p>
+    <p>权重调整说明：{{ fusion.weight_note }}</p>
+    <p>融合解释：{{ fusion.fusion_explanation }}</p>
+    <p>冲突检测结果：</p>
+    <ul class="fusion-list">
+      {% for item in fusion.conflict_results %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </article>
+  {% else %}
+  <p class="audio-desc">暂无可用记录，无法进行多模态融合评估。</p>
+  {% endif %}
+</section>
+{% endblock %}

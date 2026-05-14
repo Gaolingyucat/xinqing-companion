@@ -1,0 +1,53 @@
+{% extends "app_base.html" %}
+
+{% block app_title %}心晴陪伴 - 说一说{% endblock %}
+
+{% block app_content %}
+<section class="app-mobile-header app-header-gap">
+  <p class="app-mobile-brand">心晴陪伴</p>
+  <h1>说一说</h1>
+  <p class="app-card-desc">不想打字的时候，可以先说出来。</p>
+</section>
+
+<section class="app-card">
+  <div class="app-action-row">
+    <button class="app-primary-action app-btn" id="voiceStartBtn" type="button">开始录音</button>
+    <button class="app-secondary-action app-btn" id="voiceStopBtn" type="button">停止录音</button>
+    <button class="app-secondary-action app-btn" id="voicePlayBtn" type="button">播放录音</button>
+  </div>
+  <p class="app-overview-time" id="voiceStatusText">语音状态：未开始</p>
+  <audio id="voicePlayer" controls hidden></audio>
+</section>
+
+<section class="app-card" id="voiceResultCard" hidden>
+  <h2>语音心情</h2>
+  <p class="app-card-desc" id="voiceCompanionText"></p>
+  <div class="app-overview-grid">
+    <div class="app-overview-item">
+      <p>语音时长</p>
+      <strong id="voiceDurationText">-</strong>
+    </div>
+    <div class="app-overview-item">
+      <p>初步情绪</p>
+      <strong id="voiceEmotionText">-</strong>
+    </div>
+  </div>
+  <p class="app-overview-time" id="voiceRiskText">风险等级：-</p>
+  <p class="app-card-desc" id="voiceSuggestionText"></p>
+  <details class="app-detail-box">
+    <summary>查看分析</summary>
+    <ul class="app-detail-list">
+      <li><strong>回复来源：</strong><span id="voiceReplySourceText">-</span></li>
+      <li><strong>语音识别来源：</strong><span id="voiceAnalyzeSourceText">-</span></li>
+      <li><strong>置信度：</strong><span id="voiceConfidenceText">-</span></li>
+      <li><strong>AI理解：</strong><span id="voiceLlmEmotionText">-</span></li>
+      <li><strong>用户意图：</strong><span id="voiceLlmIntentText">-</span></li>
+      <li><strong>分析说明：</strong><span id="voiceLlmReasonText">-</span></li>
+    </ul>
+  </details>
+</section>
+{% endblock %}
+
+{% block app_scripts %}
+<script src="{{ url_for('static', filename='js/app_voice.js') }}"></script>
+{% endblock %}
